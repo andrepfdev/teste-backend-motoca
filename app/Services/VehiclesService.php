@@ -9,7 +9,7 @@ class VehiclesService
 {
     public function getAllVehicles()
     {
-        return VehicleResource::collection(Vehicle::query()->simplePaginate(10));
+        return VehicleResource::collection(Vehicle::query()->paginate(10));
     }
 
     public function getVehicleById($id)

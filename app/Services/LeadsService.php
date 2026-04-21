@@ -9,7 +9,7 @@ class LeadsService
 {
     public function getAllLeads()
     {
-        return LeadResource::collection(Lead::query()->simplePaginate(10));
+        return LeadResource::collection(Lead::query()->paginate(10));
     }
 
     public function getLeadById($id)
