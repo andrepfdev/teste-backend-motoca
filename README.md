@@ -79,6 +79,21 @@ O seeder cria os seguintes dados iniciais:
 docker compose exec app php artisan test --compact
 ```
 
+**36 testes · 99 assertions · 0 falhas**
+
+| Suite | Testes |
+|-------|--------|
+| `AuthTest` | Register, Login, Logout — happy path, credenciais inválidas, email duplicado, acesso sem token |
+| `VehicleTest` | CRUD completo, filtros por tipo/preço, leads por veículo, acesso não autenticado |
+| `LeadTest` | Criação pública, listagem protegida, validações, veículo inexistente |
+| `DashboardTest` | Contagens corretas, veículo mais solicitado, banco vazio, acesso não autenticado |
+
+Para rodar uma suite específica:
+
+```bash
+docker compose exec app php artisan test --compact tests/Feature/VehicleTest.php
+```
+
 ---
 
 ## Autenticação
@@ -419,4 +434,4 @@ Todas as respostas JSON são formatadas via Eloquent API Resources, garantindo c
 
 ### Testes
 
-Cobertura com PHPUnit Feature Tests usando `LazilyRefreshDatabase`. Os testes cobrem happy path, erros de validação e acesso não autorizado.
+Cobertura com PHPUnit Feature Tests usando `LazilyRefreshDatabase`. Cada suite testa happy path, falhas de validação e acesso não autorizado. As factories usam `recycle()` para evitar criação desnecessária de registros relacionados, mantendo os testes rápidos e isolados.
