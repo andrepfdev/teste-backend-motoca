@@ -147,8 +147,8 @@ Autentica o usuário e retorna o token de acesso.
 **Body:**
 ```json
 {
-  "email": "test@example.com",
-  "password": "password"
+  "email": "andre@example.com",
+  "password": "password123"
 }
 ```
 
