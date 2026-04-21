@@ -101,6 +101,18 @@ docker compose exec app php artisan test --compact tests/Feature/VehicleTest.php
 
 ---
 
+## Coleção Postman
+
+O arquivo com todos os endpoints configurados está em:
+
+```
+postman/Teste Backend Motoca - Andre.postman_collection.json
+```
+
+Importe no Postman via **File → Import**, as variáveis já deverão funcionar, caso não configure a variável `{{base_url}}` com `http://localhost:8000`. O token é preenchido automaticamente após Login ou Register.
+
+---
+
 ## Autenticação
 
 A API usa Laravel Sanctum com tokens Bearer. Todas as rotas marcadas como **autenticado** exigem o header:
