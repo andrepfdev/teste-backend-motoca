@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Motoca - PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "teste_andre",
+      "Username": "meutesteandre",
+      "SSLMode": "prefer",
+      "PassFile": "/var/lib/pgadmin/pgpass"
+    }
+  }
+}
