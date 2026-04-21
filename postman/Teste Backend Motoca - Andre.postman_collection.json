@@ -1,0 +1,1787 @@
+{
+	"info": {
+		"_postman_id": "4e187307-9887-48ba-95d5-68176672f1d0",
+		"name": "Teste Backend Motoca - André",
+		"description": "API REST para gerenciamento de veículos e leads de uma concessionária.\n\nTeste para a vaga de desenvolvedor back-end.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44335558"
+	},
+	"item": [
+		{
+			"name": "Público",
+			"item": [
+				{
+					"name": "Leads",
+					"item": [
+						{
+							"name": "Criar Lead",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Maria Silva\",\n  \"email\": \"maria@example.com\",\n  \"phone\": \"(11) 99999-0000\",\n  \"vehicle_id\": 2,\n  \"message\": \"Tenho interesse neste veículo.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/leads",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"leads"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Criar Lead",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Maria Silva\",\n  \"email\": \"maria@example.com\",\n  \"phone\": \"(11) 99999-0000\",\n  \"vehicle_id\": 2,\n  \"message\": \"Tenho interesse neste veículo.\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/api/leads",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"leads"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:35:59 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"name\": \"Maria Silva\",\n        \"email\": \"maria@example.com\",\n        \"phone\": \"(11) 99999-0000\",\n        \"vehicle_id\": 2,\n        \"message\": \"Tenho interesse neste veículo.\",\n        \"id\": 28\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"  const json = pm.response.json();",
+											"  pm.collectionVariables.set('token', json.data.token);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"André\",\n  \"email\": \"andre@example.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"  const json = pm.response.json();",
+											"  pm.collectionVariables.set('token', json.data.token);",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"andre@example.com\",\n  \"password\": \"password123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Criar Lead",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Maria Silva\",\n  \"email\": \"maria@example.com\",\n  \"phone\": \"(11) 99999-0000\",\n  \"vehicle_id\": 2,\n  \"message\": \"Tenho interesse neste veículo.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/leads",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"leads"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Response Criar Lead",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Maria Silva\",\n  \"email\": \"maria@example.com\",\n  \"phone\": \"(11) 99999-0000\",\n  \"vehicle_id\": 2,\n  \"message\": \"Tenho interesse neste veículo.\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/leads",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"leads"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.29.8"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.20"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 21 Apr 2026 14:35:59 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"name\": \"Maria Silva\",\n        \"email\": \"maria@example.com\",\n        \"phone\": \"(11) 99999-0000\",\n        \"vehicle_id\": 2,\n        \"message\": \"Tenho interesse neste veículo.\",\n        \"id\": 28\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Privado",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Usuário Autenticado",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Usuário Autenticado",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/user",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"user"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:51:19 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 2,\n    \"name\": \"André\",\n    \"email\": \"andre@example.com\",\n    \"email_verified_at\": null,\n    \"created_at\": \"2026-04-21T14:30:06.000000Z\",\n    \"updated_at\": \"2026-04-21T14:30:06.000000Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"  pm.collectionVariables.set('token', '');",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Logout",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/auth/logout",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"logout"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:53:04 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Logout realizado com sucesso.\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Leads",
+					"item": [
+						{
+							"name": "Listar Leads",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/leads",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"leads"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Listar Leads",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/leads",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"leads"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:34:37 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 2,\n            \"name\": \"Joannie Kertzmann\",\n            \"email\": \"adela.larkin@example.org\",\n            \"phone\": \"940.872.9863\",\n            \"vehicle_id\": 2,\n            \"message\": null\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Mariela Kuphal\",\n            \"email\": \"adam.haag@example.org\",\n            \"phone\": \"(785) 361-9990\",\n            \"vehicle_id\": 3,\n            \"message\": \"Omnis ex quam repellendus aliquam corrupti voluptatibus. Ipsam odio ea odio enim veritatis mollitia accusantium. Libero ipsa reprehenderit earum temporibus possimus eaque sit. Sed omnis est alias sit magnam omnis occaecati.\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Miss Mona Nikolaus\",\n            \"email\": \"geraldine98@example.com\",\n            \"phone\": \"+1-763-786-6134\",\n            \"vehicle_id\": 4,\n            \"message\": \"Laborum velit et hic quae dolores quia eos quibusdam. Est in et vitae voluptatem harum. Qui recusandae sit fuga iusto fugiat quia. Laboriosam id voluptatibus hic dolor omnis magnam.\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Consuelo Abernathy IV\",\n            \"email\": \"pfeffer.shyann@example.net\",\n            \"phone\": \"(631) 501-3373\",\n            \"vehicle_id\": 4,\n            \"message\": \"Sint voluptatem facere alias voluptates nihil cumque et voluptas. Recusandae repellat laboriosam necessitatibus impedit suscipit unde quia odio.\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Gino Lockman\",\n            \"email\": \"freeda.harber@example.org\",\n            \"phone\": \"(630) 560-1370\",\n            \"vehicle_id\": 4,\n            \"message\": null\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Kadin Reinger\",\n            \"email\": \"brandy24@example.org\",\n            \"phone\": \"279-600-6507\",\n            \"vehicle_id\": 5,\n            \"message\": null\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Celestino Toy\",\n            \"email\": \"kamron.osinski@example.org\",\n            \"phone\": \"1-843-491-7804\",\n            \"vehicle_id\": 6,\n            \"message\": \"Voluptate sint harum id fugiat vitae iusto culpa repellendus. Qui rerum architecto soluta earum quam veniam. Mollitia distinctio non necessitatibus et est quis et velit.\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Dr. Russel Spencer\",\n            \"email\": \"kitty.hagenes@example.net\",\n            \"phone\": \"480.325.9164\",\n            \"vehicle_id\": 6,\n            \"message\": null\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Prof. Olin Keebler I\",\n            \"email\": \"kristin.cremin@example.net\",\n            \"phone\": \"458.309.9898\",\n            \"vehicle_id\": 6,\n            \"message\": null\n        },\n        {\n            \"id\": 11,\n            \"name\": \"Bennie Carter DDS\",\n            \"email\": \"kaitlyn.huels@example.net\",\n            \"phone\": \"480-250-1974\",\n            \"vehicle_id\": 7,\n            \"message\": null\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/leads?page=1\",\n        \"last\": \"http://localhost:8000/api/leads?page=3\",\n        \"prev\": null,\n        \"next\": \"http://localhost:8000/api/leads?page=2\"\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 3,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=2\",\n                \"label\": \"2\",\n                \"page\": 2,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=3\",\n                \"label\": \"3\",\n                \"page\": 3,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"page\": 2,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/leads\",\n        \"per_page\": 10,\n        \"to\": 10,\n        \"total\": 26\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Vehicles",
+					"item": [
+						{
+							"name": "Criar Vehicle",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"car\",\n  \"brand\": \"Honda\",\n  \"model\": \"Civic\",\n  \"year\": 2022,\n  \"price\": 85000.00,\n  \"color\": \"prata\",\n  \"mileage\": 15000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/vehicles",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"vehicles"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Criar Vehicle",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"type\": \"car\",\n  \"brand\": \"Honda\",\n  \"model\": \"Civic\",\n  \"year\": 2022,\n  \"price\": 85000.00,\n  \"color\": \"prata\",\n  \"mileage\": 15000\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/api/vehicles",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"vehicles"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:32:36 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"type\": \"car\",\n        \"brand\": \"Honda\",\n        \"model\": \"Civic\",\n        \"year\": 2022,\n        \"price\": \"85000.00\",\n        \"color\": \"prata\",\n        \"mileage\": 15000,\n        \"id\": 16\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Listar Vehicles - page 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/vehicles?page=2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"vehicles"
+									],
+									"query": [
+										{
+											"key": "type",
+											"value": "car",
+											"disabled": true
+										},
+										{
+											"key": "min_price",
+											"value": "10000",
+											"disabled": true
+										},
+										{
+											"key": "max_price",
+											"value": "80000",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listar Vehicle",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/vehicles/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"vehicles",
+										"3"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Listar Vehicle",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/vehicles/3",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"vehicles",
+												"3"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:59:10 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 3,\n        \"type\": \"car\",\n        \"brand\": \"Honda\",\n        \"model\": \"Fit\",\n        \"year\": 2023,\n        \"price\": \"86421.06\",\n        \"color\": \"yellow\",\n        \"mileage\": 173701\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Update Vehicle",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"price\": 79000.00,\n  \"mileage\": 20000\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/api/vehicles/5",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"vehicles",
+										"5"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Update Vehicle",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"price\": 79000.00,\n  \"mileage\": 20000\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/api/vehicles/5",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"vehicles",
+												"5"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 15:00:50 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"id\": 5,\n        \"type\": \"motorcycle\",\n        \"brand\": \"Honda\",\n        \"model\": \"CB 500 Hornet\",\n        \"year\": 2022,\n        \"price\": \"79000.00\",\n        \"color\": \"white\",\n        \"mileage\": 20000\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Deletar Vehicle",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/vehicles/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"vehicles",
+										"1"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Deletar Vehicle",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/vehicles/1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"vehicles",
+												"1"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:34:07 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Vehicle deleted successfully\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Lista de Leads por Vehicle",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/vehicles/2/leads",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"vehicles",
+										"2",
+										"leads"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Lista de Leads por Vehicle",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/vehicles/2/leads",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"vehicles",
+												"2",
+												"leads"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:58:33 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 2,\n            \"name\": \"Joannie Kertzmann\",\n            \"email\": \"adela.larkin@example.org\",\n            \"phone\": \"940.872.9863\",\n            \"vehicle_id\": 2,\n            \"message\": null\n        },\n        {\n            \"id\": 28,\n            \"name\": \"Maria Silva\",\n            \"email\": \"maria@example.com\",\n            \"phone\": \"(11) 99999-0000\",\n            \"vehicle_id\": 2,\n            \"message\": \"Tenho interesse neste veículo.\"\n        },\n        {\n            \"id\": 29,\n            \"name\": \"Maria Silva\",\n            \"email\": \"maria@example.com\",\n            \"phone\": \"(11) 99999-0000\",\n            \"vehicle_id\": 2,\n            \"message\": \"Tenho interesse neste veículo.\"\n        },\n        {\n            \"id\": 30,\n            \"name\": \"Maria Silva\",\n            \"email\": \"maria@example.com\",\n            \"phone\": \"(11) 99999-0000\",\n            \"vehicle_id\": 2,\n            \"message\": \"Tenho interesse neste veículo.\"\n        },\n        {\n            \"id\": 31,\n            \"name\": \"Maria Silva\",\n            \"email\": \"maria@example.com\",\n            \"phone\": \"(11) 99999-0000\",\n            \"vehicle_id\": 2,\n            \"message\": \"Tenho interesse neste veículo.\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/vehicles/2/leads?page=1\",\n        \"last\": \"http://localhost:8000/api/vehicles/2/leads?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/vehicles/2/leads?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/vehicles/2/leads\",\n        \"per_page\": 10,\n        \"to\": 5,\n        \"total\": 5\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Dashboard",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/dashboard",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"dashboard"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Dashboard",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/dashboard",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"dashboard"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 15:00:04 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": {\n        \"total_vehicles\": 15,\n        \"total_leads\": 30,\n        \"most_requested_vehicle\": {\n            \"id\": 2,\n            \"type\": \"motorcycle\",\n            \"brand\": \"Honda\",\n            \"model\": \"CB 300F Twister\",\n            \"year\": 2000,\n            \"price\": \"109743.26\",\n            \"color\": \"maroon\",\n            \"mileage\": 19610,\n            \"leads_count\": 5\n        }\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Leads",
+					"item": [
+						{
+							"name": "Listar Leads",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/leads",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"leads"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Listar Leads",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/leads",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"leads"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:34:37 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"data\": [\n        {\n            \"id\": 2,\n            \"name\": \"Joannie Kertzmann\",\n            \"email\": \"adela.larkin@example.org\",\n            \"phone\": \"940.872.9863\",\n            \"vehicle_id\": 2,\n            \"message\": null\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Mariela Kuphal\",\n            \"email\": \"adam.haag@example.org\",\n            \"phone\": \"(785) 361-9990\",\n            \"vehicle_id\": 3,\n            \"message\": \"Omnis ex quam repellendus aliquam corrupti voluptatibus. Ipsam odio ea odio enim veritatis mollitia accusantium. Libero ipsa reprehenderit earum temporibus possimus eaque sit. Sed omnis est alias sit magnam omnis occaecati.\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"Miss Mona Nikolaus\",\n            \"email\": \"geraldine98@example.com\",\n            \"phone\": \"+1-763-786-6134\",\n            \"vehicle_id\": 4,\n            \"message\": \"Laborum velit et hic quae dolores quia eos quibusdam. Est in et vitae voluptatem harum. Qui recusandae sit fuga iusto fugiat quia. Laboriosam id voluptatibus hic dolor omnis magnam.\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Consuelo Abernathy IV\",\n            \"email\": \"pfeffer.shyann@example.net\",\n            \"phone\": \"(631) 501-3373\",\n            \"vehicle_id\": 4,\n            \"message\": \"Sint voluptatem facere alias voluptates nihil cumque et voluptas. Recusandae repellat laboriosam necessitatibus impedit suscipit unde quia odio.\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Gino Lockman\",\n            \"email\": \"freeda.harber@example.org\",\n            \"phone\": \"(630) 560-1370\",\n            \"vehicle_id\": 4,\n            \"message\": null\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Kadin Reinger\",\n            \"email\": \"brandy24@example.org\",\n            \"phone\": \"279-600-6507\",\n            \"vehicle_id\": 5,\n            \"message\": null\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Celestino Toy\",\n            \"email\": \"kamron.osinski@example.org\",\n            \"phone\": \"1-843-491-7804\",\n            \"vehicle_id\": 6,\n            \"message\": \"Voluptate sint harum id fugiat vitae iusto culpa repellendus. Qui rerum architecto soluta earum quam veniam. Mollitia distinctio non necessitatibus et est quis et velit.\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Dr. Russel Spencer\",\n            \"email\": \"kitty.hagenes@example.net\",\n            \"phone\": \"480.325.9164\",\n            \"vehicle_id\": 6,\n            \"message\": null\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Prof. Olin Keebler I\",\n            \"email\": \"kristin.cremin@example.net\",\n            \"phone\": \"458.309.9898\",\n            \"vehicle_id\": 6,\n            \"message\": null\n        },\n        {\n            \"id\": 11,\n            \"name\": \"Bennie Carter DDS\",\n            \"email\": \"kaitlyn.huels@example.net\",\n            \"phone\": \"480-250-1974\",\n            \"vehicle_id\": 7,\n            \"message\": null\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/leads?page=1\",\n        \"last\": \"http://localhost:8000/api/leads?page=3\",\n        \"prev\": null,\n        \"next\": \"http://localhost:8000/api/leads?page=2\"\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 3,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=2\",\n                \"label\": \"2\",\n                \"page\": 2,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=3\",\n                \"label\": \"3\",\n                \"page\": 3,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://localhost:8000/api/leads?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"page\": 2,\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://localhost:8000/api/leads\",\n        \"per_page\": 10,\n        \"to\": 10,\n        \"total\": 26\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Usuário Autenticado",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/user",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Usuário Autenticado",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/user",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"user"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:51:19 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 2,\n    \"name\": \"André\",\n    \"email\": \"andre@example.com\",\n    \"email_verified_at\": null,\n    \"created_at\": \"2026-04-21T14:30:06.000000Z\",\n    \"updated_at\": \"2026-04-21T14:30:06.000000Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"  pm.collectionVariables.set('token', '');",
+											"}"
+										],
+										"type": "text/javascript",
+										"packages": {},
+										"requests": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Response Logout",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}"
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/api/auth/logout",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"logout"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Server",
+											"value": "nginx/1.29.8"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.4.20"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 21 Apr 2026 14:53:04 GMT"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Logout realizado com sucesso.\"\n}"
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
