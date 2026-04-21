@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\VehicleType;
+use Database\Factories\VehicleFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Vehicle extends Model
 {
-    /** @use HasFactory<\Database\Factories\VehicleFactory> */
+    /** @use HasFactory<VehicleFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -26,6 +28,7 @@ class Vehicle extends Model
     ];
 
     protected $casts = [
+        'type' => VehicleType::class,
         'price' => 'decimal:2',
     ];
 
@@ -36,5 +39,4 @@ class Vehicle extends Model
     {
         return $this->hasMany(Lead::class);
     }
-
 }
