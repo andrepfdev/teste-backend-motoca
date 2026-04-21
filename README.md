@@ -187,7 +187,7 @@ Autentica o usuário e retorna o token de acesso.
 ```json
 {
   "data": {
-    "user": { "id": 1, "name": "Test User", "email": "test@example.com" },
+    "user": { "id": 1, "name": "André", "email": "andre@example.com" },
     "token": "1|abc123..."
   }
 }
