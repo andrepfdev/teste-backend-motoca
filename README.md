@@ -422,7 +422,7 @@ Retorna um resumo geral da concessionária.
 
 ### Service Layer
 
-A lógica de negócio é isolada em classes de serviço (`app/Services/`), mantendo os controllers responsáveis apenas por receber a requisição, delegar e retornar a resposta.
+A camada de serviço (`app/Services/`) foi introduzida intencionalmente como demonstração do padrão, mesmo que para a escala deste teste o uso direto do Eloquent nos controllers seria suficiente. A separação isola a lógica de negócio, facilita testes unitários e torna o código mais preparado para crescimento — mostrando familiaridade com design patterns aplicados ao Laravel.
 
 ### Form Requests
 
