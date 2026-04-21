@@ -123,6 +123,20 @@ Authorization: Bearer {token}
 
 ---
 
+## Bônus Swagger
+
+Na mesma pasta do postman deixei um extra:
+
+```
+postman/swagger.yaml
+```
+
+Para usar sugiro a extensão Swagger Viewer na própria IDE.
+
+![alt text](image.png)
+
+---
+
 ## Endpoints
 
 ### Autenticação

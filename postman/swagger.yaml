@@ -1,0 +1,558 @@
+openapi: 3.0.3
+info:
+  title: Teste Backend Motoca - André
+  description: API REST para gerenciamento de veículos e leads de uma concessionária. Teste para a vaga de desenvolvedor back-end.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+        type:
+          type: string
+          enum: [car, motorcycle]
+          example: car
+        brand:
+          type: string
+          example: Honda
+        model:
+          type: string
+          example: Civic
+        year:
+          type: integer
+          example: 2022
+        price:
+          type: string
+          example: "85000.00"
+        color:
+          type: string
+          example: prata
+        mileage:
+          type: integer
+          example: 15000
+
+    VehicleInput:
+      type: object
+      required: [type, brand, model, year, price, color, mileage]
+      properties:
+        type:
+          type: string
+          enum: [car, motorcycle]
+          example: car
+        brand:
+          type: string
+          example: Honda
+        model:
+          type: string
+          example: Civic
+        year:
+          type: integer
+          example: 2022
+        price:
+          type: number
+          format: float
+          example: 85000.00
+        color:
+          type: string
+          example: prata
+        mileage:
+          type: integer
+          example: 15000
+
+    VehicleUpdateInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [car, motorcycle]
+        brand:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+        price:
+          type: number
+          format: float
+          example: 79000.00
+        color:
+          type: string
+        mileage:
+          type: integer
+          example: 20000
+
+    Lead:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 28
+        name:
+          type: string
+          example: Maria Silva
+        email:
+          type: string
+          format: email
+          example: maria@example.com
+        phone:
+          type: string
+          example: "(11) 99999-0000"
+        vehicle_id:
+          type: integer
+          example: 2
+        message:
+          type: string
+          nullable: true
+          example: Tenho interesse neste veículo.
+
+    LeadInput:
+      type: object
+      required: [name, email, phone, vehicle_id]
+      properties:
+        name:
+          type: string
+          example: Maria Silva
+        email:
+          type: string
+          format: email
+          example: maria@example.com
+        phone:
+          type: string
+          example: "(11) 99999-0000"
+        vehicle_id:
+          type: integer
+          example: 2
+        message:
+          type: string
+          nullable: true
+          example: Tenho interesse neste veículo.
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: André
+        email:
+          type: string
+          format: email
+          example: andre@example.com
+        email_verified_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PaginationLinks:
+      type: object
+      properties:
+        first:
+          type: string
+          nullable: true
+        last:
+          type: string
+          nullable: true
+        prev:
+          type: string
+          nullable: true
+        next:
+          type: string
+          nullable: true
+
+    PaginationMeta:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        from:
+          type: integer
+          nullable: true
+        last_page:
+          type: integer
+        path:
+          type: string
+        per_page:
+          type: integer
+        to:
+          type: integer
+          nullable: true
+        total:
+          type: integer
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Registrar novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password, password_confirmation]
+              properties:
+                name:
+                  type: string
+                  example: André
+                email:
+                  type: string
+                  format: email
+                  example: andre@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+                password_confirmation:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        "201":
+          description: Usuário registrado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "1|abc123..."
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: andre@example.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "1|abc123..."
+        "401":
+          description: Credenciais inválidas
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Logout realizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout realizado com sucesso.
+
+  /user:
+    get:
+      tags: [Users]
+      summary: Usuário autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Dados do usuário autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Não autenticado
+
+  /leads:
+    post:
+      tags: [Leads]
+      summary: Criar Lead (público)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeadInput"
+      responses:
+        "201":
+          description: Lead criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Lead"
+        "422":
+          description: Dados inválidos
+
+    get:
+      tags: [Leads]
+      summary: Listar Leads (autenticado)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Lista paginada de leads
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Lead"
+                  links:
+                    $ref: "#/components/schemas/PaginationLinks"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "401":
+          description: Não autenticado
+
+  /vehicles:
+    post:
+      tags: [Vehicles]
+      summary: Criar veículo
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleInput"
+      responses:
+        "201":
+          description: Veículo criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Vehicle"
+        "401":
+          description: Não autenticado
+        "422":
+          description: Dados inválidos
+
+  /vehicles/{id}:
+    get:
+      tags: [Vehicles]
+      summary: Buscar veículo por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 3
+      responses:
+        "200":
+          description: Dados do veículo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Vehicle"
+        "401":
+          description: Não autenticado
+        "404":
+          description: Veículo não encontrado
+
+    put:
+      tags: [Vehicles]
+      summary: Atualizar veículo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 5
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VehicleUpdateInput"
+      responses:
+        "200":
+          description: Veículo atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Vehicle"
+        "401":
+          description: Não autenticado
+        "404":
+          description: Veículo não encontrado
+
+    delete:
+      tags: [Vehicles]
+      summary: Deletar veículo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Veículo deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Vehicle deleted successfully
+        "401":
+          description: Não autenticado
+        "404":
+          description: Veículo não encontrado
+
+  /vehicles/{id}/leads:
+    get:
+      tags: [Vehicles]
+      summary: Lista de Leads por veículo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 2
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Lista paginada de leads do veículo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Lead"
+                  links:
+                    $ref: "#/components/schemas/PaginationLinks"
+                  meta:
+                    $ref: "#/components/schemas/PaginationMeta"
+        "401":
+          description: Não autenticado
+        "404":
+          description: Veículo não encontrado
+
+  /dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Dados do dashboard
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Estatísticas gerais da concessionária
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      total_vehicles:
+                        type: integer
+                        example: 15
+                      total_leads:
+                        type: integer
+                        example: 30
+                      most_requested_vehicle:
+                        allOf:
+                          - $ref: "#/components/schemas/Vehicle"
+                          - type: object
+                            properties:
+                              leads_count:
+                                type: integer
+                                example: 5
+        "401":
+          description: Não autenticado
