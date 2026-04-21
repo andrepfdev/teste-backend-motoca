@@ -6,6 +6,7 @@ use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 use App\Models\Vehicle;
 use App\Services\VehiclesService;
+use Illuminate\Http\Request;
 
 class VehicleController extends Controller
 {
@@ -14,9 +15,11 @@ class VehicleController extends Controller
     /**
      * Retorna uma lista paginada de veículos, com 10 itens por página.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->vehiclesService->getAllVehicles();
+        $filters = $request->only(['type', 'min_price', 'max_price']);
+
+        return $this->vehiclesService->getAllVehicles($filters);
     }
 
     /**
@@ -42,7 +45,7 @@ class VehicleController extends Controller
      */
     public function update(UpdateVehicleRequest $request, Vehicle $vehicle)
     {
-        $data = $request->validated(); // Usa Form Request 
+        $data = $request->validated(); // Usa Form Request
 
         return $this->vehiclesService->updateVehicle($vehicle->id, $data);
     }

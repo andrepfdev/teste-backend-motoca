@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\VehicleType;
 use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,18 +12,16 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class VehicleFactory extends Factory
 {
     /**
-     * Define the model's default state.
-     *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
         return [
-            'type' => $this->faker->randomElement(['Carro', 'Moto', 'Caminhão']),
-            'brand' => $this->faker->randomElement(['Toyota', 'Honda', 'Ford', 'Chevrolet', 'Volkswagen']),
+            'type' => $this->faker->randomElement(VehicleType::cases())->value,
+            'brand' => $this->faker->randomElement(['Honda', 'Toyota', 'Ford', 'Chevrolet', 'Volkswagen', 'Yamaha']),
             'model' => $this->faker->word(),
-            'year' => $this->faker->numberBetween(1990, 2024),
-            'price' => $this->faker->randomFloat(2, 5000, 100000),
+            'year' => $this->faker->numberBetween(2000, (int) date('Y')),
+            'price' => $this->faker->randomFloat(2, 5000, 150000),
             'color' => $this->faker->safeColorName(),
             'mileage' => $this->faker->numberBetween(0, 200000),
         ];
