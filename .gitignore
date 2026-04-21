@@ -29,3 +29,7 @@ Thumbs.db
 Guia_Tecnico_Laravel_Motoca_v3.pdf
 AGENTS.md
 CLAUDE.md
+boost.json
+opencode.json
+.mcp.json
+docker/pgadmin/pgpass
