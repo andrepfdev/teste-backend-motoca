@@ -40,6 +40,9 @@ O script irá:
 6. Rodar as migrations
 7. Perguntar se deseja popular o banco com seeders
 
+
+![alt text](image-2.png)
+
 ---
 
 ### Instalação manual
@@ -110,6 +113,8 @@ postman/Teste Backend Motoca - Andre.postman_collection.json
 ```
 
 Importe no Postman via **File → Import**, as variáveis já deverão funcionar, caso não configure a variável `{{base_url}}` com `http://localhost:8000`. O token é preenchido automaticamente após Login ou Register.
+
+![alt text](image-1.png)
 
 ---
 
