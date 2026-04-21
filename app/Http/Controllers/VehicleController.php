@@ -9,7 +9,7 @@ use App\Services\VehiclesService;
 
 class VehicleController extends Controller
 {
-    public function __construct(protected Vehicle $vehiclesService) {}
+    public function __construct(protected VehiclesService $vehiclesService) {}
 
     /**
      * Retorna uma lista paginada de veículos, com 10 itens por página.
