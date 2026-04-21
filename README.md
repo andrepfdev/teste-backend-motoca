@@ -1,8 +1,11 @@
+
 # Teste Técnico - Backend Laravel (Concessionária)
 
 API REST para gerenciamento de veículos e leads de uma concessionária.
 
 ---
+
+https://github.com/user-attachments/assets/579202ea-c927-458c-a941-a1b8a581de46
 
 ## Stack
 
