@@ -17,14 +17,19 @@ API REST para gerenciamento de veículos e leads de uma concessionária.
 
 ## Como rodar o projeto
 
+> **Ambiente de desenvolvimento:** este projeto foi desenvolvido e testado em **Linux**. O script de instalação automática utiliza shell bash e comandos Unix nativos. Erros em ambiente Windows (fora do WSL2) não foram testados e podem ocorrer.
+
 ### Instalação automática (recomendado)
 
+O projeto inclui um script `install.sh` que automatiza todo o processo de configuração com um menu interativo.
+
 ```bash
-git clone <repositorio>
+git clone git@github.com:andrepfdev/teste-backend-motoca.git
 cd teste-backend-motoca
-chmod +x install.sh
 ./install.sh
 ```
+
+> O arquivo já possui permissão de execução commitada no repositório (`chmod +x`), não sendo necessário configurá-la manualmente.
 
 O script irá:
 1. Perguntar qual comando Docker você usa (`docker compose` ou `docker-compose`)
@@ -42,7 +47,7 @@ O script irá:
 #### 1. Clonar e configurar o ambiente
 
 ```bash
-git clone <repositorio>
+git clone git@github.com:andrepfdev/teste-backend-motoca.git
 cd teste-backend-motoca
 cp .env.example .env
 ```
