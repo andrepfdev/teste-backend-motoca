@@ -1,6 +1,6 @@
-# Teste Tecnico - Backend Laravel (Concessionaria)
+# Teste Técnico - Backend Laravel (Concessionária)
 
-API REST para gerenciamento de veiculos e leads de uma concessionaria.
+API REST para gerenciamento de veículos e leads de uma concessionária.
 
 ---
 
@@ -8,16 +8,38 @@ API REST para gerenciamento de veiculos e leads de uma concessionaria.
 
 - PHP 8.4
 - Laravel 13
-- PostgreSQL
+- PostgreSQL 16
 - Docker / Docker Compose
 - Nginx
-- Laravel Sanctum (autenticacao)
+- Laravel Sanctum (autenticação via token)
 
 ---
 
 ## Como rodar o projeto
 
-### 1. Clonar e configurar o ambiente
+### Instalação automática (recomendado)
+
+```bash
+git clone <repositorio>
+cd teste-backend-motoca
+chmod +x install.sh
+./install.sh
+```
+
+O script irá:
+1. Perguntar qual comando Docker você usa (`docker compose` ou `docker-compose`)
+2. Criar o `.env` a partir do `.env.example`
+3. Subir os containers
+4. Aguardar o banco de dados ficar pronto
+5. Gerar a `APP_KEY` se estiver vazia
+6. Rodar as migrations
+7. Perguntar se deseja popular o banco com seeders
+
+---
+
+### Instalação manual
+
+#### 1. Clonar e configurar o ambiente
 
 ```bash
 git clone <repositorio>
@@ -25,43 +47,43 @@ cd teste-backend-motoca
 cp .env.example .env
 ```
 
-### 2. Subir os containers
+#### 2. Subir os containers
 
 ```bash
 docker compose up -d
 ```
 
-A aplicacao ficara disponivel em `http://localhost:8000`.
+A aplicação ficará disponível em `http://localhost:8000`.
 
-### 3. Rodar as migrations e seeders
+#### 3. Rodar as migrations
 
 ```bash
-docker compose exec app php artisan migrate --seed
+docker compose exec app php artisan migrate
 ```
 
-O seeder cria um usuario padrao para autenticacao:
+#### 4. Rodar os seeders (opcional)
 
-- **Email:** `admin@motoca.com`
-- **Senha:** `password`
+```bash
+docker compose exec app php artisan db:seed
+```
+
+O seeder cria os seguintes dados iniciais:
+
+- **Usuário:** `test@example.com` / `password`
+- **15 veículos** com dados fictícios
+- **Leads** vinculados aleatoriamente aos veículos
+
+### 4. Rodar os testes
+
+```bash
+docker compose exec app php artisan test --compact
+```
 
 ---
 
-## Autenticacao
+## Autenticação
 
-A API usa Laravel Sanctum com tokens via header.
-
-```
-POST /api/login
-```
-
-```json
-{
-  "email": "admin@motoca.com",
-  "password": "password"
-}
-```
-
-Use o token retornado no header de todas as requisicoes autenticadas:
+A API usa Laravel Sanctum com tokens Bearer. Todas as rotas marcadas como **autenticado** exigem o header:
 
 ```
 Authorization: Bearer {token}
@@ -71,74 +93,330 @@ Authorization: Bearer {token}
 
 ## Endpoints
 
-### Vehicles
+### Autenticação
 
-| Metodo | Rota | Autenticado |
-|--------|------|-------------|
-| GET | /api/vehicles | Nao |
-| POST | /api/vehicles | Sim |
-| GET | /api/vehicles/{id} | Nao |
-| PUT | /api/vehicles/{id} | Sim |
-| DELETE | /api/vehicles/{id} | Sim |
+#### `POST /api/auth/register`
 
-Filtros disponiveis:
+Cria um novo usuário e retorna o token de acesso.
 
+**Público**
+
+**Body:**
+```json
+{
+  "name": "André",
+  "email": "andre@example.com",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+```
+
+**Resposta `201`:**
+```json
+{
+  "data": {
+    "user": { "id": 1, "name": "André", "email": "andre@example.com" },
+    "token": "1|abc123..."
+  }
+}
+```
+
+---
+
+#### `POST /api/auth/login`
+
+Autentica o usuário e retorna o token de acesso.
+
+**Público**
+
+**Body:**
+```json
+{
+  "email": "test@example.com",
+  "password": "password"
+}
+```
+
+**Resposta `200`:**
+```json
+{
+  "data": {
+    "user": { "id": 1, "name": "Test User", "email": "test@example.com" },
+    "token": "1|abc123..."
+  }
+}
+```
+
+**Resposta `401` (credenciais inválidas):**
+```json
+{
+  "message": "Credenciais inválidas."
+}
+```
+
+---
+
+#### `POST /api/auth/logout`
+
+Revoga o token atual.
+
+**Autenticado**
+
+**Resposta `200`:**
+```json
+{
+  "message": "Logout realizado com sucesso."
+}
+```
+
+---
+
+### Veículos
+
+Todos os endpoints de veículos são **autenticados**.
+
+#### `GET /api/vehicles`
+
+Lista todos os veículos com paginação (10 por página).
+
+**Filtros disponíveis:**
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `type` | `car` \| `motorcycle` | Filtra por tipo |
+| `min_price` | number | Preço mínimo |
+| `max_price` | number | Preço máximo |
+
+**Exemplos:**
 ```
 GET /api/vehicles?type=car
 GET /api/vehicles?max_price=80000
+GET /api/vehicles?type=motorcycle&min_price=5000&max_price=30000
 ```
+
+**Resposta `200`:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "type": "car",
+      "brand": "Honda",
+      "model": "Civic",
+      "year": 2022,
+      "price": "85000.00",
+      "color": "prata",
+      "mileage": 15000
+    }
+  ],
+  "links": { "first": "...", "last": "...", "prev": null, "next": null },
+  "meta": { "current_page": 1, "per_page": 10, "total": 15, "last_page": 2 }
+}
+```
+
+---
+
+#### `POST /api/vehicles`
+
+Cria um novo veículo.
+
+**Autenticado**
+
+**Body:**
+```json
+{
+  "type": "car",
+  "brand": "Honda",
+  "model": "Civic",
+  "year": 2022,
+  "price": 85000.00,
+  "color": "prata",
+  "mileage": 15000
+}
+```
+
+| Campo | Regras |
+|-------|--------|
+| `type` | obrigatório, `car` ou `motorcycle` |
+| `brand` | obrigatório, string |
+| `model` | obrigatório, string |
+| `year` | obrigatório, inteiro, mínimo 1900 |
+| `price` | obrigatório, numérico, mínimo 0 |
+| `color` | obrigatório, string |
+| `mileage` | obrigatório, inteiro, mínimo 0 |
+
+**Resposta `201`:** objeto do veículo criado.
+
+---
+
+#### `GET /api/vehicles/{id}`
+
+Retorna os dados de um veículo específico.
+
+**Autenticado**
+
+**Resposta `200`:**
+```json
+{
+  "data": {
+    "id": 1,
+    "type": "car",
+    "brand": "Honda",
+    "model": "Civic",
+    "year": 2022,
+    "price": "85000.00",
+    "color": "prata",
+    "mileage": 15000
+  }
+}
+```
+
+---
+
+#### `PUT /api/vehicles/{id}`
+
+Atualiza os dados de um veículo. Todos os campos são opcionais.
+
+**Autenticado**
+
+**Body (parcial):**
+```json
+{
+  "price": 79000.00,
+  "mileage": 20000
+}
+```
+
+**Resposta `200`:** objeto do veículo atualizado.
+
+---
+
+#### `DELETE /api/vehicles/{id}`
+
+Remove um veículo.
+
+**Autenticado**
+
+**Resposta `200`:**
+```json
+{
+  "message": "Vehicle deleted successfully"
+}
+```
+
+---
+
+#### `GET /api/vehicles/{id}/leads`
+
+Lista todos os leads de um veículo específico, com paginação.
+
+**Autenticado**
+
+**Resposta `200`:** mesma estrutura paginada da listagem de leads.
+
+---
 
 ### Leads
 
-| Metodo | Rota | Autenticado |
-|--------|------|-------------|
-| POST | /api/leads | Nao |
-| GET | /api/leads | Sim |
-| GET | /api/vehicles/{id}/leads | Sim |
+#### `POST /api/leads`
+
+Registra interesse em um veículo.
+
+**Público**
+
+**Body:**
+```json
+{
+  "name": "Maria Silva",
+  "email": "maria@example.com",
+  "phone": "(11) 99999-0000",
+  "vehicle_id": 1,
+  "message": "Tenho interesse neste veículo."
+}
+```
+
+| Campo | Regras |
+|-------|--------|
+| `name` | obrigatório, string |
+| `email` | obrigatório, email válido |
+| `phone` | obrigatório, string |
+| `vehicle_id` | obrigatório, deve existir na tabela `vehicles` |
+| `message` | opcional, string |
+
+**Resposta `201`:** objeto do lead criado.
+
+---
+
+#### `GET /api/leads`
+
+Lista todos os leads com paginação (10 por página).
+
+**Autenticado**
+
+**Resposta `200`:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Maria Silva",
+      "email": "maria@example.com",
+      "phone": "(11) 99999-0000",
+      "vehicle_id": 1,
+      "message": "Tenho interesse neste veículo."
+    }
+  ],
+  "links": { ... },
+  "meta": { ... }
+}
+```
+
+---
 
 ### Dashboard
 
-```
-GET /api/dashboard  (autenticado)
+#### `GET /api/dashboard`
+
+Retorna um resumo geral da concessionária.
+
+**Autenticado**
+
+**Resposta `200`:**
+```json
+{
+  "data": {
+    "total_vehicles": 15,
+    "total_leads": 32,
+    "most_requested_vehicle": {
+      "id": 3,
+      "type": "car",
+      "brand": "Toyota",
+      "model": "Corolla",
+      "year": 2021,
+      "price": "95000.00",
+      "color": "branco",
+      "mileage": 8000
+    }
+  }
+}
 ```
 
 ---
 
-## Abordagem tecnica
+## Arquitetura
 
-### Validacao com Form Requests
+### Service Layer
 
-Toda validacao de entrada e feita via classes `FormRequest`, mantendo os controllers limpos e a logica de validacao isolada e testavel. Cada endpoint com entrada de dados tem seu proprio Form Request com regras e mensagens customizadas.
+A lógica de negócio é isolada em classes de serviço (`app/Services/`), mantendo os controllers responsáveis apenas por receber a requisição, delegar e retornar a resposta.
 
-### Testes com PHPUnit
+### Form Requests
 
-A cobertura de testes usa PHPUnit com Feature Tests, priorizando o comportamento real da API (requests HTTP, respostas JSON, estado do banco). Os testes cobrem:
-
-- Fluxo feliz (happy path) de cada endpoint
-- Falhas de validacao
-- Acesso nao autorizado a rotas protegidas
-- Regras de negocio (ex: `year >= 2000`, `price > 0`)
-
-O banco de dados de testes usa `LazilyRefreshDatabase` para performance, com factories e estados para criacao de dados.
-
-### Controllers
-
-Controllers sao enxutos: recebem o Form Request validado, delegam para o model/Eloquent e retornam Eloquent API Resources. Nenhuma logica de negocio vive no controller.
+Toda validação de entrada usa classes `FormRequest` com mensagens em português, mantendo os controllers limpos.
 
 ### API Resources
 
-Todas as respostas JSON sao formatadas via Eloquent API Resources, garantindo consistencia e desacoplamento entre o modelo e o contrato da API.
+Todas as respostas JSON são formatadas via Eloquent API Resources, garantindo consistência e desacoplamento entre o modelo e o contrato da API.
 
----
+### Testes
 
-## Colecao Postman
-
-O arquivo `postman_collection.json` na raiz do repositorio contem todos os endpoints documentados e prontos para importar.
-
----
-
-## Testes
-
-```bash
-docker compose exec app php artisan test --compact
-```
+Cobertura com PHPUnit Feature Tests usando `LazilyRefreshDatabase`. Os testes cobrem happy path, erros de validação e acesso não autorizado.

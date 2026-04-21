@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lead;
+use App\Models\Vehicle;
 use App\Services\LeadsService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreLeadRequest;
@@ -26,9 +27,10 @@ class LeadController extends Controller
     public function store(StoreLeadRequest $request): JsonResponse
     {
         $data = $request->validated();
+
         return $this->leadsService->createLead($data)->response()->setStatusCode(201);
     }
-    
+
     /**
      * Exibe os detalhes de um lead específico, identificado pelo seu ID, se falhar retorna 404.
      */
@@ -43,6 +45,7 @@ class LeadController extends Controller
     public function update(UpdateLeadRequest $request, Lead $lead)
     {
         $data = $request->validated();
+
         return $this->leadsService->updateLead($lead->id, $data);
     }
 
@@ -52,5 +55,10 @@ class LeadController extends Controller
     public function destroy(Lead $lead): JsonResponse
     {
         return $this->leadsService->deleteLead($lead->id);
+    }
+
+    public function byVehicle(Vehicle $vehicle)
+    {
+        return $this->leadsService->getLeadsByVehicle($vehicle->id);
     }
 }

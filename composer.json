@@ -15,6 +15,7 @@
         "laravel/tinker": "^3.0"
     },
     "require-dev": {
+        "andreaselia/laravel-api-to-postman": "^2.3",
         "fakerphp/faker": "^1.23",
         "laravel/boost": "^2.0",
         "laravel/pail": "^1.2.5",
