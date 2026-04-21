@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: motoca_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - motoca_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: motoca_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - motoca_network
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: motoca_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-teste_andre}
+      POSTGRES_USER: ${DB_USERNAME:-meutesteandre}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-9vRo7GMXf!lxOSwg}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - motoca_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-meutesteandre} -d ${DB_DATABASE:-teste_andre}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  motoca_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
