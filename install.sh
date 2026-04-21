@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eo pipefail
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -22,24 +22,20 @@ echo ""
 read -rp "Escolha [1/2]: " docker_choice
 
 case "$docker_choice" in
-    1)
-        DOCKER_COMPOSE="docker compose"
-        ;;
-    2)
-        DOCKER_COMPOSE="docker-compose"
-        ;;
+    1) DC=("docker" "compose") ;;
+    2) DC=("docker-compose") ;;
     *)
         echo -e "${RED}Opção inválida. Usando 'docker compose' como padrão.${NC}"
-        DOCKER_COMPOSE="docker compose"
+        DC=("docker" "compose")
         ;;
 esac
 
-echo -e "${GREEN}✔ Usando: ${DOCKER_COMPOSE}${NC}"
+echo -e "${GREEN}✔ Usando: ${DC[*]}${NC}"
 echo ""
 
 # ── 2. Verificar se o comando existe ──────────────────────────────────────────
-if ! command -v ${DOCKER_COMPOSE%% *} &> /dev/null; then
-    echo -e "${RED}Erro: Docker não encontrado. Instale o Docker antes de continuar.${NC}"
+if ! command -v "${DC[0]}" &> /dev/null; then
+    echo -e "${RED}Erro: '${DC[0]}' não encontrado. Instale o Docker antes de continuar.${NC}"
     exit 1
 fi
 
@@ -55,32 +51,45 @@ echo ""
 
 # ── 4. Subir containers ────────────────────────────────────────────────────────
 echo -e "${YELLOW}► Subindo containers Docker...${NC}"
-$DOCKER_COMPOSE up -d --build
+"${DC[@]}" up -d --build
 echo -e "${GREEN}✔ Containers no ar.${NC}"
 echo ""
 
 # ── 5. Aguardar o PostgreSQL ficar pronto ──────────────────────────────────────
 echo -e "${YELLOW}► Aguardando o banco de dados ficar pronto...${NC}"
-until $DOCKER_COMPOSE exec -T postgres pg_isready -U "${DB_USERNAME:-meutesteandre}" &> /dev/null; do
+
+DB_USER=$(grep "^DB_USERNAME=" .env | cut -d '=' -f2- | tr -d '"')
+DB_USER="${DB_USER:-meutesteandre}"
+
+MAX_ATTEMPTS=30
+attempt=0
+until "${DC[@]}" exec -T postgres pg_isready -U "$DB_USER" &> /dev/null; do
+    attempt=$((attempt + 1))
+    if [ "$attempt" -ge "$MAX_ATTEMPTS" ]; then
+        echo ""
+        echo -e "${RED}Erro: banco de dados não respondeu após ${MAX_ATTEMPTS} tentativas.${NC}"
+        exit 1
+    fi
     printf "."
     sleep 2
 done
+
 echo ""
 echo -e "${GREEN}✔ Banco de dados pronto.${NC}"
 echo ""
 
 # ── 6. Gerar APP_KEY se estiver vazia ──────────────────────────────────────────
-APP_KEY_VALUE=$(grep "^APP_KEY=" .env | cut -d '=' -f2)
+APP_KEY_VALUE=$(grep "^APP_KEY=" .env | cut -d '=' -f2-)
 if [ -z "$APP_KEY_VALUE" ]; then
     echo -e "${YELLOW}► Gerando APP_KEY...${NC}"
-    $DOCKER_COMPOSE exec -T app php artisan key:generate --no-interaction
+    "${DC[@]}" exec -T app php artisan key:generate --no-interaction
     echo -e "${GREEN}✔ APP_KEY gerada.${NC}"
     echo ""
 fi
 
 # ── 7. Rodar migrations ────────────────────────────────────────────────────────
 echo -e "${YELLOW}► Rodando migrations...${NC}"
-$DOCKER_COMPOSE exec -T app php artisan migrate --no-interaction
+"${DC[@]}" exec -T app php artisan migrate --no-interaction
 echo -e "${GREEN}✔ Migrations concluídas.${NC}"
 echo ""
 
@@ -89,7 +98,7 @@ read -rp "Deseja popular o banco com dados de exemplo (seeders)? [s/N]: " seed_c
 
 if [[ "$seed_choice" =~ ^[sS]$ ]]; then
     echo -e "${YELLOW}► Rodando seeders...${NC}"
-    $DOCKER_COMPOSE exec -T app php artisan db:seed --no-interaction
+    "${DC[@]}" exec -T app php artisan db:seed --no-interaction
     echo -e "${GREEN}✔ Seeders concluídos.${NC}"
     echo ""
     echo -e "${CYAN}Dados criados:${NC}"
