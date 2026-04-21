@@ -2,20 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 use App\Models\Vehicle;
 use App\Services\VehiclesService;
-use App\Http\Requests\StoreVehicleRequest;
 
 class VehicleController extends Controller
 {
-
-    protected $vehiclesService;
-
-    public function __construct(VehiclesService $vehiclesService)
-    {
-        $this->vehiclesService = $vehiclesService;
-    }
+    public function __construct(protected Vehicle $vehiclesService) {}
 
     /**
      * Retorna uma lista paginada de veículos, com 10 itens por página.
@@ -26,13 +20,13 @@ class VehicleController extends Controller
     }
 
     /**
-     * Salva um novo veículo no banco de dados. Os dados do veículo são validados usando o StoreVehicleRequest. 
+     * Salva um novo veículo no banco de dados. Os dados do veículo são validados usando o StoreVehicleRequest.
      */
     public function store(StoreVehicleRequest $request)
     {
         $data = $request->validated(); // Usando Form Request Validation para validar os dados
 
-        return $this->vehiclesService->createVehicle($data)->response()->json(['message' => 'Vehicle created successfully'], 201);
+        return $this->vehiclesService->createVehicle($data)->response()->setStatusCode(201);
     }
 
     /**
@@ -44,17 +38,17 @@ class VehicleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza os dados de um veículo existente, identificado pelo seu ID.
      */
     public function update(UpdateVehicleRequest $request, Vehicle $vehicle)
     {
-        $data = $request->validated();
+        $data = $request->validated(); // Usa Form Request 
 
         return $this->vehiclesService->updateVehicle($vehicle->id, $data);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um veículo do banco de dados, identificado pelo seu ID.
      */
     public function destroy(Vehicle $vehicle)
     {
