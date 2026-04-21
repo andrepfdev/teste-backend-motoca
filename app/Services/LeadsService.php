@@ -3,29 +3,32 @@
 namespace App\Services;
 
 use App\Models\Lead;
+use App\Http\Resources\LeadResource;
 
 class LeadsService
 {
     public function getAllLeads()
     {
-        return Lead::query()->with('vehicle')->simplePaginate(10);
+        return LeadResource::collection(Lead::query()->simplePaginate(10));
     }
 
     public function getLeadById($id)
     {
-        return Lead::query()->with('vehicle')->findOrFail($id);
+        $lead = Lead::findOrFail($id);
+        return new LeadResource($lead);
     }
 
     public function createLead($data)
     {
-        return Lead::create($data);
+        $lead = Lead::create($data);
+        return new LeadResource($lead);
     }
 
     public function updateLead($id, $data)
     {
         $lead = Lead::findOrFail($id);
         $lead->update($data);
-        return $lead;
+        return new LeadResource($lead);
     }
 
     public function deleteLead($id)
